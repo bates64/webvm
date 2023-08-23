@@ -1,10 +1,10 @@
-FROM --platform=i386 i386/debian:buster
+FROM --platform=i386 rust:bullseye-slim
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get clean && apt-get update && apt-get -y upgrade
 RUN apt-get -y install git bash curl vim
 
-RUN curl https://sh.rustup.rs -sSf | sh -s -- --profile minimal -y
-RUN source "/root/.cargo/env"
+#RUN curl https://sh.rustup.rs -sSf | sh -s -- --profile minimal -y
+#ENV PATH=.cargo/bin
 RUN cargo install pigment64
 
 RUN git clone https://github.com/pmret/papermario.git /var/papermario --verbose --depth=1
