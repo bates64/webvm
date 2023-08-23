@@ -6,6 +6,9 @@ RUN apt-get -y install git bash curl vim
 # Download and extract pigment64 and put it on PATH
 WORKDIR /usr/bin
 RUN curl -L https://github.com/decompals/pigment64/releases/download/0.3.0/pigment64_0.3.0_x86_64-unknown-linux-musl.tar.gz | tar -xz
+RUN chmod +x pigment64
+# Sanity check
+RUN pigment64 --version | grep "pigment64 0.3.0" || exit 1
 
 RUN git clone https://github.com/pmret/papermario.git /var/papermario --verbose --depth=1
 
