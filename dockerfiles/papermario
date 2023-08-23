@@ -1,20 +1,29 @@
-FROM --platform=i386 i386/debian:buster
+FROM --platform=i386 i386/debian:buster-slim
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get clean && apt-get update && apt-get -y upgrade
-RUN apt-get -y install git bash curl vim
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get -y install git bash curl ca-certificates
 
 # Download and extract pigment64 and put it on PATH
-WORKDIR /usr/bin
-RUN curl -L https://github.com/decompals/pigment64/releases/download/0.3.0/pigment64_0.3.0_x86_64-unknown-linux-musl.tar.gz | tar -xz
-RUN chmod +x pigment64
-# Sanity check
-RUN pigment64 --version | grep "pigment64 0.3.0" || exit 1
+#WORKDIR /usr/bin
+#RUN curl -L https://github.com/decompals/pigment64/releases/download/0.3.0/pigment64_0.3.0_x86_64-unknown-linux-musl.tar.gz | tar -xz
+#RUN chmod +x pigment64
+#RUN pigment64 --version | grep "pigment64 0.3.0" || exit 1
+COPY ./pigment64 /usr/bin/pigment64
 
+# Install papermario dependencies
 RUN git clone https://github.com/pmret/papermario.git /var/papermario --verbose --depth=1
-
 WORKDIR /var/papermario
 RUN ./install_deps.sh
 RUN ./install_compilers.sh
+
+# Clean up to reduce image size
+RUN apt-get clean
+RUN pip cache purge
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Report disk size
+RUN df -h
 
 ENV HOME="/root" TERM="xterm" USER="root" SHELL="/bin/bash" LANG="en_US.UTF-8" LC_ALL="C"
 RUN echo 'root:password' | chpasswd
