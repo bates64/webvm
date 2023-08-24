@@ -1,4 +1,4 @@
-FROM --platform=i386 i386/debian:buster-slim
+FROM --platform=i386 i386/debian:bookworm-slim
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get -y upgrade
 
