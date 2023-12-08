@@ -17,3 +17,9 @@ RUN chmod +x /compilers/n64/gcc2.8.1pm/*
 FROM scratch as release
 
 COPY --from=base /compilers /compilers
+
+
+# webvm
+ENV HOME="/root" TERM="xterm" USER="root" SHELL="/bin/bash" LANG="en_US.UTF-8" LC_ALL="C"
+RUN echo 'root:password' | chpasswd
+CMD [ "/bin/bash" ]
